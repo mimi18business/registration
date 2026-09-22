@@ -4,6 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>استمارة التسجيل | أكاديمية دنيا</title>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '346826507467427');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=346826507467427&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -260,6 +275,18 @@
         </select>
       </div>
 
+      <div class="field">
+        <label for="referred_by">من رشّحك؟ <span class="required">*</span></label>
+        <select id="referred_by" name="referred_by" required>
+          <option value="" disabled selected>اختاري...</option>
+          <option value="أمال">أمال</option>
+          <option value="حلوة">حلوة</option>
+          <option value="لبنى">لبنى</option>
+          <option value="جهيدة">جهيدة</option>
+          <option value="أول مرة">أول مرة (لم يرشحني أحد)</option>
+        </select>
+      </div>
+
       <button type="submit" id="submitBtn">إرسال التسجيل</button>
       <div class="note">بياناتك تصل مباشرة لفريق أكاديمية دنيا، ونتواصل معكِ خلال 24 ساعة.</div>
     </form>
@@ -295,6 +322,16 @@
     opt.textContent = w;
     wilayaSelect.appendChild(opt);
   });
+
+  // اختيار البرنامج تلقائياً حسب رابط الإعلان (?utm_campaign=... أو ?program=...)
+  const campaignPrograms = {
+    sihr_tajalli: "ورشة سحر التجلي",
+    asrar_mabi3at: "ورشة أسرار المبيعات",
+    awal_dawra: "ورشة أول دورة تدريبية"
+  };
+  const params = new URLSearchParams(location.search);
+  const preset = campaignPrograms[params.get('program') || params.get('utm_campaign')];
+  if(preset) document.getElementById('program').value = preset;
 
   const form = document.getElementById('regForm');
   const errorBox = document.getElementById('errorBox');
@@ -351,6 +388,7 @@
       body: data
     })
     .then(() => {
+      if(window.fbq) fbq('track', 'Lead', {content_name: data.get('program')});
       form.style.display = 'none';
       document.getElementById('successMsg').style.display = 'block';
     })
