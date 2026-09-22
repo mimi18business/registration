@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استمارة التسجيل | أكاديمية دنيا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum:#6B2C5F;
+    --plum-dark:#4A1E42;
+    --gold:#C9A24B;
+    --cream:#FBF6F0;
+    --text:#2E2130;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Tajawal',sans-serif;
+    background:linear-gradient(180deg,var(--plum-dark) 0%, var(--plum) 45%, var(--cream) 45%);
+    min-height:100vh;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:32px 16px 60px;
+    color:var(--text);
+  }
+  .card{
+    width:100%;
+    max-width:480px;
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 20px 50px rgba(0,0,0,.25);
+    overflow:hidden;
+  }
+  .header{
+    background:var(--plum-dark);
+    color:#fff;
+    text-align:center;
+    padding:28px 20px 22px;
+  }
+  .header .brand{
+    font-size:14px;
+    letter-spacing:1px;
+    color:var(--gold);
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .header h1{
+    margin:0;
+    font-size:22px;
+    font-weight:900;
+  }
+  .header p{
+    margin:8px 0 0;
+    font-size:13px;
+    opacity:.85;
+  }
+  form{padding:26px 22px 10px;}
+  .field{margin-bottom:16px;}
+  label{
+    display:block;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:6px;
+    color:var(--plum-dark);
+  }
+  input[type=text], input[type=tel], select, textarea{
+    width:100%;
+    padding:12px 14px;
+    border:1.5px solid #e2d8e0;
+    border-radius:10px;
+    font-family:'Tajawal',sans-serif;
+    font-size:15px;
+    background:#fdfbfb;
+    color:var(--text);
+    outline:none;
+    transition:border-color .15s;
+  }
+  input:focus, select:focus, textarea:focus{
+    border-color:var(--plum);
+  }
+  .radio-group{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .radio-option{
+    flex:1;
+    min-width:100px;
+  }
+  .radio-option input{
+    display:none;
+  }
+  .radio-option label{
+    display:block;
+    text-align:center;
+    padding:10px 8px;
+    border:1.5px solid #e2d8e0;
+    border-radius:10px;
+    font-weight:500;
+    font-size:13px;
+    cursor:pointer;
+    margin:0;
+    color:var(--text);
+    transition:.15s;
+  }
+  .radio-option input:checked + label{
+    background:var(--plum);
+    border-color:var(--plum);
+    color:#fff;
+    font-weight:700;
+  }
+  button{
+    width:100%;
+    padding:15px;
+    background:linear-gradient(90deg,var(--plum),var(--plum-dark));
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    font-family:'Tajawal',sans-serif;
+    font-size:16px;
+    font-weight:900;
+    cursor:pointer;
+    margin-top:6px;
+    margin-bottom:22px;
+    transition:transform .1s, opacity .15s;
+  }
+  button:active{transform:scale(.98);}
+  button:disabled{opacity:.6; cursor:default;}
+  .note{
+    text-align:center;
+    font-size:12px;
+    color:#8a7d87;
+    margin:-6px 0 20px;
+  }
+  .required{color:#c0392b;}
+  .msg{
+    display:none;
+    text-align:center;
+    padding:34px 22px 40px;
+  }
+  .msg .icon{font-size:52px; margin-bottom:12px;}
+  .msg h2{color:var(--plum-dark); margin:0 0 8px;}
+  .msg p{color:#665; font-size:14px; line-height:1.7; margin:0 0 18px;}
+  .msg a{
+    display:inline-block;
+    background:#25D366;
+    color:#fff;
+    text-decoration:none;
+    padding:12px 22px;
+    border-radius:30px;
+    font-weight:700;
+    font-size:14px;
+  }
+  .error-box{
+    display:none;
+    background:#fdecea;
+    color:#a12b1f;
+    border:1px solid #f5b7b1;
+    padding:10px 14px;
+    border-radius:10px;
+    font-size:13px;
+    margin:0 22px 16px;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="brand">أكاديمية دُنيا · الكوتش دنيا</div>
+      <h1>استمارة التسجيل</h1>
+      <p>عبّئي بياناتك وحدّدي البرنامج المهتمة به، ونتواصل معك بأسرع وقت</p>
+    </div>
+
+    <div class="error-box" id="errorBox">فضلاً عبّئي جميع الحقول المطلوبة بشكل صحيح.</div>
+
+    <form id="regForm">
+      <div class="field">
+        <label>الاسم الكامل <span class="required">*</span></label>
+        <input type="text" id="name" name="name" placeholder="مثال: أمينة بن علي" required>
+      </div>
+
+      <div class="field">
+        <label>رقم الهاتف (واتساب) <span class="required">*</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="0555 XX XX XX" pattern="0[5-7][0-9]{8}" required>
+      </div>
+
+      <div class="field">
+        <label>الولاية <span class="required">*</span></label>
+        <select id="wilaya" name="wilaya" required>
+          <option value="" disabled selected>اختاري الولاية</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>العنوان (البلدية / الحي) <span class="required">*</span></label>
+        <input type="text" id="address" name="address" placeholder="مثال: حي بن عكنون، الجزائر العاصمة" required>
+      </div>
+
+      <div class="field">
+        <label>وضعيتك الحالية <span class="required">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" id="st1" name="status" value="أدرس" required>
+            <label for="st1">أدرس</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="st2" name="status" value="موظفة" required>
+            <label for="st2">موظفة</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="st3" name="status" value="صاحبة مشروع" required>
+            <label for="st3">صاحبة مشروع</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="st4" name="status" value="ماكثة بالبيت" required>
+            <label for="st4">ماكثة بالبيت</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>البرنامج المهتمة به <span class="required">*</span></label>
+        <select id="program" name="program" required>
+          <option value="" disabled selected>اختاري البرنامج</option>
+          <option value="تحدي العروس">تحدي العروس</option>
+          <option value="كيف أعالج نفسي؟">كيف أعالج نفسي؟</option>
+          <option value="برنامج تحليل شيفرة الشخصيات">برنامج تحليل شيفرة الشخصيات</option>
+          <option value="كيف أبيع دوراتي؟">كيف أبيع دوراتي؟</option>
+          <option value="خبير التسويق الإلكتروني">خبير التسويق الإلكتروني</option>
+          <option value="باقة التجلي">باقة التجلي</option>
+          <option value="جلسة استشارية: مشروعي">جلسة استشارية: مشروعي</option>
+          <option value="الاستشارة الاستثمارية">الاستشارة الاستثمارية</option>
+          <option value="أساسيات الكوتشينغ الاحترافي">أساسيات الكوتشينغ الاحترافي</option>
+          <option value="استشارة شخصية">استشارة شخصية</option>
+          <option value="كيف اطلق مشروعي اون لاين؟!">كيف اطلق مشروعي اون لاين؟!</option>
+          <option value="لم أحدد بعد">لم أحدد بعد</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>خدمات استوديو ELITE (اختياري)</label>
+        <select id="elite" name="elite">
+          <option value="لا يهمني حاليًا" selected>لا يهمني حاليًا</option>
+          <option value="خدمات التصوير للمنتجات">خدمات التصوير للمنتجات</option>
+          <option value="خدمات تصوير للمدربين">خدمات تصوير للمدربين</option>
+          <option value="تعاون مع المدربين">تعاون مع المدربين</option>
+        </select>
+      </div>
+
+      <button type="submit" id="submitBtn">إرسال التسجيل</button>
+      <div class="note">بياناتك تصل مباشرة لفريق أكاديمية دنيا، ونتواصل معكِ خلال 24 ساعة.</div>
+    </form>
+
+    <div class="msg" id="successMsg">
+      <div class="icon">✅</div>
+      <h2>تم استلام تسجيلك بنجاح!</h2>
+      <p>شكرًا لثقتك بأكاديمية دنيا. سيتواصل معكِ فريقنا خلال 24 ساعة لتأكيد التسجيل.<br>إذا حابة تتأكدي فورًا، تقدري تراسلينا مباشرة:</p>
+      <a href="https://wa.me/213793163561" target="_blank">راسلينا عبر واتساب</a>
+    </div>
+  </div>
+
+<script>
+  // ⚠️ بعد نشر Apps Script كـ Web App، الصقي رابط الـ Web App هنا مكان الرابط التالي
+  const SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+  const wilayas = [
+    "01 - أدرار","02 - الشلف","03 - الأغواط","04 - أم البواقي","05 - باتنة","06 - بجاية",
+    "07 - بسكرة","08 - بشار","09 - البليدة","10 - البويرة","11 - تمنراست","12 - تبسة",
+    "13 - تلمسان","14 - تيارت","15 - تيزي وزو","16 - الجزائر العاصمة","17 - الجلفة",
+    "18 - جيجل","19 - سطيف","20 - سعيدة","21 - سكيكدة","22 - سيدي بلعباس","23 - عنابة",
+    "24 - قالمة","25 - قسنطينة","26 - المدية","27 - مستغانم","28 - المسيلة","29 - معسكر",
+    "30 - ورقلة","31 - وهران","32 - البيض","33 - إليزي","34 - برج بوعريريج","35 - بومرداس",
+    "36 - الطارف","37 - تندوف","38 - تيسمسيلت","39 - الوادي","40 - خنشلة","41 - سوق أهراس",
+    "42 - تيبازة","43 - ميلة","44 - عين الدفلى","45 - النعامة","46 - عين تموشنت","47 - غرداية",
+    "48 - غليزان","49 - تيميمون","50 - برج باجي مختار","51 - أولاد جلال","52 - بني عباس",
+    "53 - عين صالح","54 - عين قزام","55 - تقرت","56 - جانت","57 - المغير","58 - المنيعة"
+  ];
+  const wilayaSelect = document.getElementById('wilaya');
+  wilayas.forEach(w => {
+    const opt = document.createElement('option');
+    opt.value = w;
+    opt.textContent = w;
+    wilayaSelect.appendChild(opt);
+  });
+
+  const form = document.getElementById('regForm');
+  const errorBox = document.getElementById('errorBox');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    errorBox.style.display = 'none';
+
+    if(!form.checkValidity()){
+      errorBox.style.display = 'block';
+      form.reportValidity();
+      return;
+    }
+
+    const data = new URLSearchParams(new FormData(form));
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'جارٍ الإرسال...';
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: data
+    })
+    .then(() => {
+      form.style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    })
+    .catch(() => {
+      errorBox.textContent = 'صار خطأ في الإرسال، حاولي مرة أخرى أو راسلينا عبر واتساب.';
+      errorBox.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'إرسال التسجيل';
+    });
+  });
+</script>
+</body>
+</html>
