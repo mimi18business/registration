@@ -67,7 +67,7 @@
     margin-bottom:6px;
     color:var(--plum-dark);
   }
-  input[type=text], input[type=tel], select, textarea{
+  input[type=text], input[type=tel], input[type=email], select, textarea{
     width:100%;
     padding:12px 14px;
     border:1.5px solid #e2d8e0;
@@ -180,24 +180,29 @@
 
     <form id="regForm">
       <div class="field">
-        <label>الاسم الكامل <span class="required">*</span></label>
-        <input type="text" id="name" name="name" placeholder="مثال: أمينة بن علي" required>
+        <label for="name">الاسم الكامل <span class="required">*</span></label>
+        <input type="text" id="name" name="name" placeholder="مثال: أمينة بن علي" autocomplete="name" required>
       </div>
 
       <div class="field">
-        <label>رقم الهاتف (واتساب) <span class="required">*</span></label>
-        <input type="tel" id="phone" name="phone" placeholder="0555 XX XX XX" pattern="0[5-7][0-9]{8}" required>
+        <label for="phone">رقم الهاتف (واتساب) <span class="required">*</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="0555 12 34 56" inputmode="numeric" autocomplete="tel" dir="ltr" required>
       </div>
 
       <div class="field">
-        <label>الولاية <span class="required">*</span></label>
+        <label for="email">البريد الإلكتروني <span class="required">*</span></label>
+        <input type="email" id="email" name="email" placeholder="example@gmail.com" autocomplete="email" dir="ltr" required>
+      </div>
+
+      <div class="field">
+        <label for="wilaya">الولاية <span class="required">*</span></label>
         <select id="wilaya" name="wilaya" required>
           <option value="" disabled selected>اختاري الولاية</option>
         </select>
       </div>
 
       <div class="field">
-        <label>العنوان (البلدية / الحي) <span class="required">*</span></label>
+        <label for="address">العنوان (البلدية / الحي) <span class="required">*</span></label>
         <input type="text" id="address" name="address" placeholder="مثال: حي بن عكنون، الجزائر العاصمة" required>
       </div>
 
@@ -224,7 +229,7 @@
       </div>
 
       <div class="field">
-        <label>البرنامج المهتمة به <span class="required">*</span></label>
+        <label for="program">البرنامج المهتمة به <span class="required">*</span></label>
         <select id="program" name="program" required>
           <option value="" disabled selected>اختاري البرنامج</option>
           <option value="تحدي العروس">تحدي العروس</option>
@@ -238,12 +243,15 @@
           <option value="أساسيات الكوتشينغ الاحترافي">أساسيات الكوتشينغ الاحترافي</option>
           <option value="استشارة شخصية">استشارة شخصية</option>
           <option value="كيف اطلق مشروعي اون لاين؟!">كيف اطلق مشروعي اون لاين؟!</option>
+          <option value="ورشة سحر التجلي">ورشة سحر التجلي</option>
+          <option value="ورشة أسرار المبيعات">ورشة أسرار المبيعات</option>
+          <option value="ورشة أول دورة تدريبية">ورشة أول دورة تدريبية</option>
           <option value="لم أحدد بعد">لم أحدد بعد</option>
         </select>
       </div>
 
       <div class="field">
-        <label>خدمات استوديو ELITE (اختياري)</label>
+        <label for="elite">خدمات استوديو ELITE (اختياري)</label>
         <select id="elite" name="elite">
           <option value="لا يهمني حاليًا" selected>لا يهمني حاليًا</option>
           <option value="خدمات التصوير للمنتجات">خدمات التصوير للمنتجات</option>
@@ -292,15 +300,45 @@
   const errorBox = document.getElementById('errorBox');
   const submitBtn = document.getElementById('submitBtn');
 
+  const phoneInput = document.getElementById('phone');
+  const emailInput = document.getElementById('email');
+  const DEFAULT_ERROR = 'فضلاً عبّئي جميع الحقول المطلوبة بشكل صحيح.';
+
+  // يقبل الرقم بالمسافات أو بـ +213 ويحوّله إلى الصيغة 0XXXXXXXXX
+  function normalizePhone(v){
+    let d = v.replace(/[^\d+]/g, '');
+    if(d.startsWith('+213')) d = '0' + d.slice(4);
+    else if(d.startsWith('00213')) d = '0' + d.slice(5);
+    return d.replace(/\D/g, '');
+  }
+
+  function validatePhone(){
+    const ok = /^0[5-7]\d{8}$/.test(normalizePhone(phoneInput.value));
+    phoneInput.setCustomValidity(ok ? '' : 'أدخلي رقم هاتف صحيح من 10 أرقام يبدأ بـ 05 أو 06 أو 07');
+  }
+  phoneInput.addEventListener('input', validatePhone);
+
   form.addEventListener('submit', function(e){
     e.preventDefault();
     errorBox.style.display = 'none';
+    errorBox.textContent = DEFAULT_ERROR;
+
+    emailInput.value = emailInput.value.trim();
+    validatePhone();
 
     if(!form.checkValidity()){
       errorBox.style.display = 'block';
       form.reportValidity();
       return;
     }
+
+    if(!SCRIPT_URL.startsWith('https://script.google.com/')){
+      errorBox.textContent = 'الاستمارة غير مربوطة بعد بـ Google Sheets. ضعي رابط الـ Web App في SCRIPT_URL.';
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    phoneInput.value = normalizePhone(phoneInput.value);
 
     const data = new URLSearchParams(new FormData(form));
 
